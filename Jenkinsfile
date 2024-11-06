@@ -2,12 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "calculator-app"
-        CONTAINER_NAME = "prem_con"  // Define the container name here
+        DOCKER_CREDENTIALS_ID = 'dockerhub' // Replace with your Jenkins credentials ID
+        DOCKER_IMAGE_NAME = 'premdatagrokr/calculator' // Format: <username>/<image_name>
+        CONTAINER_NAME = 'add' // Define container name for reuse
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
                 // Checkout the source code from the repository
                 checkout scm
@@ -32,7 +33,7 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Unit Tests') {
             steps {
                 script {
                     // Run tests using pytest inside the Docker container
@@ -41,16 +42,31 @@ pipeline {
             }
         }
 
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        // Push the Docker image
+                        sh "docker push ${DOCKER_IMAGE_NAME}" // Use double quotes
+                    }
+                }
+            }
+        }
+
         stage('Post-Build Cleanup') {
             steps {
                 script {
-                    // Clean up Docker container and image after build
-
-                    // Remove the container (in case it was not removed by the --rm flag)
-                    sh "docker rm -f ${CONTAINER_NAME} || true"
-
-                    // Remove the Docker image
-                    sh "docker rmi ${DOCKER_IMAGE} || true"
+                    try {
+                        // Stop and remove the container
+                        bat "docker stop ${CONTAINER_NAME} || exit 0"
+                        bat "docker rm ${CONTAINER_NAME} || exit 0"
+                        
+                        // Optionally remove the Docker image after the pipeline completes
+                        bat "docker rmi ${DOCKER_IMAGE_NAME} || exit 0"
+                    } catch (Exception e) {
+                        error "Failed to clean up Docker resources: ${e.message}"
+                    }
                 }
             }
         }
@@ -58,11 +74,11 @@ pipeline {
     
     post {
         success {
-            echo 'Build and tests were successful!'
+            echo 'Build, tests, and Docker push were successful!'
         }
 
         failure {
-            echo 'Something went wrong during the build or tests!'
+            echo 'Something went wrong during the build, tests, or Docker push!'
         }
     }
 }
