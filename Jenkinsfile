@@ -23,37 +23,37 @@ pipeline {
             }
         }
         
-        // stage('Run Calculator Operation') {
-        //     steps {
-        //         script {
-        //             // Run the calculator operation (add 10 5) with the container name from environment
-        //             sh "docker run --name ${CONTAINER_NAME} --rm ${DOCKER_IMAGE} python calculator.py add 10 5"
-        //         }
-        //     }
-        // }
+        stage('Run Calculator Operation') {
+            steps {
+                script {
+                    // Run the calculator operation (add 10 5) with the container name from environment
+                    sh "docker run --name ${CONTAINER_NAME} --rm ${DOCKER_IMAGE} python calculator.py add 10 5"
+                }
+            }
+        }
 
-        // stage('Run Tests') {
-        //     steps {
-        //         script {
-        //             // Run tests using pytest inside the Docker container
-        //             sh "docker run --rm ${DOCKER_IMAGE} pytest --maxfail=1 --disable-warnings -q"
-        //         }
-        //     }
-        // }
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Run tests using pytest inside the Docker container
+                    sh "docker run --rm ${DOCKER_IMAGE} pytest --maxfail=1 --disable-warnings -q"
+                }
+            }
+        }
 
-        // stage('Post-Build Cleanup') {
-        //     steps {
-        //         script {
-        //             // Clean up Docker container and image after build
+        stage('Post-Build Cleanup') {
+            steps {
+                script {
+                    // Clean up Docker container and image after build
 
-        //             // Remove the container (in case it was not removed by the --rm flag)
-        //             sh "docker rm -f ${CONTAINER_NAME} || true"
+                    // Remove the container (in case it was not removed by the --rm flag)
+                    sh "docker rm -f ${CONTAINER_NAME} || true"
 
-        //             // Remove the Docker image
-        //             sh "docker rmi ${DOCKER_IMAGE} || true"
-        //         }
-        //     }
-        // }
+                    // Remove the Docker image
+                    sh "docker rmi ${DOCKER_IMAGE} || true"
+                }
+            }
+        }
     }
     
     post {
