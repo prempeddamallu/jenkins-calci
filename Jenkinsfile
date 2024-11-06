@@ -14,14 +14,14 @@ pipeline {
             }
         }
         
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             // Build the Docker image
-        //             sh "docker build -t ${DOCKER_IMAGE} ."
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                }
+            }
+        }
         
         // stage('Run Calculator Operation') {
         //     steps {
