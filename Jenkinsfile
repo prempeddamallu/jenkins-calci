@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // Run the calculator operation (add 10 5) with the container name from environment
-                    sh "docker run --name ${CONTAINER_NAME} --rm ${DOCKER_IMAGE} python calculator.py add 10 5"
+                    sh "docker run --name ${CONTAINER_NAME} --rm ${DOCKER_IMAGE_NAME} python calculator.py add 10 5"
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 script {
                     // Run tests using pytest inside the Docker container
-                    sh "docker run --rm ${DOCKER_IMAGE} pytest --maxfail=1 --disable-warnings -q"
+                    sh "docker run --rm ${DOCKER_IMAGE_NAME} pytest --maxfail=1 --disable-warnings -q"
                 }
             }
         }
