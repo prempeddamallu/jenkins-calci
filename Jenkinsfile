@@ -59,11 +59,11 @@ pipeline {
                 script {
                     try {
                         // Stop and remove the container
-                        bat "docker stop ${CONTAINER_NAME} || exit 0"
-                        bat "docker rm ${CONTAINER_NAME} || exit 0"
+                        sh "docker stop ${CONTAINER_NAME} || exit 0"
+                        sh "docker rm ${CONTAINER_NAME} || exit 0"
                         
                         // Optionally remove the Docker image after the pipeline completes
-                        bat "docker rmi ${DOCKER_IMAGE_NAME} || exit 0"
+                        sh "docker rmi ${DOCKER_IMAGE_NAME} || exit 0"
                     } catch (Exception e) {
                         error "Failed to clean up Docker resources: ${e.message}"
                     }
