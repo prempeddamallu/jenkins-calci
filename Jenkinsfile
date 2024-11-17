@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub' // Replace with your Jenkins credentials ID
-        DOCKER_IMAGE_NAME = 'premdatagrokr/calculator:2.0' // Format: <username>/<image_name>
+        DOCKER_IMAGE_NAME = 'premdatagrokr/calculator:3.0' // Format: <username>/<image_name>
         CONTAINER_NAME = 'add' // Define container name for reuse
     }
 
